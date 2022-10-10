@@ -1,0 +1,9 @@
+	logpath="log/"
+	step=300
+[dataBase]
+	host= "127.0.0.1"
+	port= 5432
+	user= "postgres"
+	password= "162747"
+	dbname= "canon"
+	step=5
