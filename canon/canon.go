@@ -37,7 +37,9 @@ func Cannon(name string) {
 
 		for {
 			<-step.C
+			st := time.Now()
 			table.newData()
+			cstat <- stat{name: table.name, op: "write", long: time.Now().Sub(st)}
 
 		}
 	}
@@ -65,8 +67,9 @@ func Reader(name string, interval int) {
 		step := time.NewTicker(time.Duration(interval) * time.Millisecond)
 		for {
 			<-step.C
+			st := time.Now()
 			table.readData()
-
+			cstat <- stat{name: table.name, op: "read", long: time.Now().Sub(st)}
 		}
 	}
 

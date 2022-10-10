@@ -42,8 +42,11 @@ func main() {
 	for i := 0; i < setup.Set.TablesCount; i++ {
 		go canon.Cannon(fmt.Sprintf("table%d", i))
 	}
+	go canon.Statistics()
+	fmt.Println("Готова статистика....")
+	time.Sleep(2 * time.Second)
 	fmt.Println("Начали писать....")
-	time.Sleep(time.Minute)
+	time.Sleep(20 * time.Second)
 	fmt.Println("Начали читать....")
 	for i := 0; i < setup.Set.TablesCount; i++ {
 		j := rand.Intn(setup.Set.Maximum)
