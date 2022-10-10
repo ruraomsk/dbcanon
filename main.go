@@ -4,6 +4,7 @@ import (
 	"embed"
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
 	"os/signal"
 	"syscall"
@@ -13,6 +14,7 @@ import (
 
 	"github.com/ruraomsk/ag-server/logger"
 
+	"github.com/ruraomsk/dbcanon/canon"
 	"github.com/ruraomsk/dbcanon/setup"
 )
 
@@ -37,6 +39,20 @@ func init() {
 
 func main() {
 	logger.Info.Print("Start dbcanon")
+	for i := 0; i < setup.Set.TablesCount; i++ {
+		go canon.Cannon(fmt.Sprintf("table%d", i))
+	}
+	fmt.Println("Начали писать....")
+	time.Sleep(time.Minute)
+	fmt.Println("Начали читать....")
+	for i := 0; i < setup.Set.TablesCount; i++ {
+		j := rand.Intn(setup.Set.Maximum)
+		if j <= 0 {
+			j = setup.Set.Maximum
+		}
+		go canon.Reader(fmt.Sprintf("table%d", i), j)
+	}
+
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt,
 		syscall.SIGQUIT,
