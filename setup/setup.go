@@ -8,8 +8,9 @@ type Setup struct {
 	LogPath     string   `toml:"logpath"`
 	DataBase    DataBase `toml:"dataBase"`
 	TablesCount int      `toml:"count"` //Кол-во таблиц для записи
+	TablesAvg   int      `toml:"avg"`   //Кол-во таблиц для чтения
 	Step        int      `toml:"step"`  //Интервал записи новых значений в таблицы (миллисекунты)
-	Maximum     int      `toml:"max"`   //Максимальный интервал порождения запроса на агрегацию по времени
+	Maximum     int      `toml:"max"`   //Максимальный интервал порождения запроса на агрегацию по времени  в минутах
 }
 
 // DataBase настройки базы данных postresql

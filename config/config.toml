@@ -1,9 +1,10 @@
 	logpath="log/"
-	step=200
-	count=20
-	max=60
+	step=300
+	count=40
+	avg=10
+	max=10
 [dataBase]
-	host= "172.16.58.20"
+	host= "172.16.58.30"
 	# host= "127.0.0.1"
 	port= 5432
 	user= "postgres"

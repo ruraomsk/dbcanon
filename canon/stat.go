@@ -3,6 +3,8 @@ package canon
 import (
 	"fmt"
 	"time"
+
+	"github.com/ruraomsk/ag-server/logger"
 )
 
 type stat struct {
@@ -44,18 +46,18 @@ func Statistics() {
 				v.wcount = 0
 				v.wsumm = 0
 			}
+			res := ""
 			if rc != 0 {
-				fmt.Printf("\t%fs", (float64(rs)/float64(rc))/1000000000)
+				res += fmt.Sprintf("\t%f ms %d items", (float64(rs)/float64(rc))/1000000, rc)
 			} else {
-				fmt.Printf("\tnot\t")
+				res += fmt.Sprintf("\tnot\t\t")
 			}
 			if wc != 0 {
-				fmt.Printf("\t%fs", (float64(ws)/float64(wc))/1000000000)
+				res += fmt.Sprintf("\t%fms %d items", (float64(ws)/float64(wc))/1000000, wc)
 			} else {
-				fmt.Printf("\tnot")
+				res += fmt.Sprintf("\tnot")
 			}
-			fmt.Print("\n")
-
+			logger.Info.Print(res)
 		case s := <-cstat:
 			var es *extstat
 			var is bool

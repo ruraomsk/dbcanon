@@ -40,7 +40,7 @@ func init() {
 func main() {
 	logger.Info.Print("Start dbcanon")
 	for i := 0; i < setup.Set.TablesCount; i++ {
-		go canon.Cannon(fmt.Sprintf("table%d", i))
+		go canon.Cannon(fmt.Sprintf("table%d", i), i)
 	}
 	go canon.Statistics()
 	fmt.Println("Готова статистика....")
@@ -48,7 +48,7 @@ func main() {
 	fmt.Println("Начали писать....")
 	time.Sleep(20 * time.Second)
 	fmt.Println("Начали читать....")
-	for i := 0; i < setup.Set.TablesCount; i++ {
+	for i := 0; i < setup.Set.TablesAvg; i++ {
 		j := rand.Intn(setup.Set.Maximum)
 		if j <= 0 {
 			j = setup.Set.Maximum

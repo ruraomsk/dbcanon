@@ -12,7 +12,7 @@ import (
 	"github.com/ruraomsk/dbcanon/setup"
 )
 
-func Cannon(name string) {
+func Cannon(name string, i int) {
 	var err error
 	dbinfo := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
 		setup.Set.DataBase.Host, setup.Set.DataBase.User,
@@ -33,6 +33,7 @@ func Cannon(name string) {
 			continue
 		}
 		table.createifneed()
+		// time.Sleep(time.Duration((i+1)*100) * time.Millisecond)
 		step := time.NewTicker(time.Duration(setup.Set.Step) * time.Millisecond)
 
 		for {
@@ -64,13 +65,14 @@ func Reader(name string, interval int) {
 			time.Sleep(10 * time.Second)
 			continue
 		}
-		step := time.NewTicker(time.Duration(interval) * time.Millisecond)
+		step := time.NewTicker(time.Duration(interval) * time.Minute)
 		for {
 			<-step.C
 			st := time.Now()
-			table.readData()
-			cstat <- stat{name: table.name, op: "read", long: time.Now().Sub(st)}
+			_, err = table.readData()
+			if err == nil {
+				cstat <- stat{name: table.name, op: "read", long: time.Now().Sub(st)}
+			}
 		}
 	}
-
 }
