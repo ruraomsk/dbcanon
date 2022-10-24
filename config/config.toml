@@ -1,13 +1,13 @@
 	logpath="log/"
-	step=300
+	step=100
 	count=40
 	avg=10
 	max=10
 [dataBase]
-	host= "172.16.58.30"
+	host= "172.16.58.60"
 	# host= "127.0.0.1"
 	port= 5432
 	user= "postgres"
 	password= "162747"
-	dbname= "canon"
+	dbname= "cannon"
 	step=5

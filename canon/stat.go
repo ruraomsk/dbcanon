@@ -48,12 +48,12 @@ func Statistics() {
 			}
 			res := ""
 			if rc != 0 {
-				res += fmt.Sprintf("\t%f ms %d items", (float64(rs)/float64(rc))/1000000, rc)
+				res += fmt.Sprintf("%10f ms %6d items", (float64(rs)/float64(rc))/1000000, rc)
 			} else {
-				res += fmt.Sprintf("\tnot\t\t")
+				res += fmt.Sprintf("not\t\t\t\t\t")
 			}
 			if wc != 0 {
-				res += fmt.Sprintf("\t%fms %d items", (float64(ws)/float64(wc))/1000000, wc)
+				res += fmt.Sprintf("\t%10fms %6d items", (float64(ws)/float64(wc))/1000000, wc)
 			} else {
 				res += fmt.Sprintf("\tnot")
 			}

@@ -9,6 +9,16 @@
             "database": "canon",
             "username": "postgres",
             "password": "162747"
+        },
+        {
+            "previewLimit": 50,
+            "server": "172.16.58.60",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "SSD",
+            "database": "report",
+            "username": "postgres",
+            "password": "162747"
         }
     ]
 }

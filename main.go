@@ -39,13 +39,16 @@ func init() {
 
 func main() {
 	logger.Info.Print("Start dbcanon")
-	for i := 0; i < setup.Set.TablesCount; i++ {
-		go canon.Cannon(fmt.Sprintf("table%d", i), i)
-	}
+	setup.Set.Work = true
 	go canon.Statistics()
 	fmt.Println("Готова статистика....")
 	time.Sleep(2 * time.Second)
 	fmt.Println("Начали писать....")
+	for i := 0; i < setup.Set.TablesCount-1; i++ {
+		go canon.Cannon(fmt.Sprintf("table%d", i), true)
+	}
+	//Эта для проверки спинлока
+	go canon.Cannon(fmt.Sprintf("table%d", setup.Set.TablesCount-1), false)
 	time.Sleep(20 * time.Second)
 	fmt.Println("Начали читать....")
 	for i := 0; i < setup.Set.TablesAvg; i++ {
@@ -55,6 +58,8 @@ func main() {
 		}
 		go canon.Reader(fmt.Sprintf("table%d", i), j)
 	}
+	//Эта для проверки спинлока
+	go canon.Reader(fmt.Sprintf("table%d", setup.Set.TablesCount-1), -1)
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt,
@@ -68,6 +73,7 @@ loop:
 		fmt.Println("\nWait make abort...")
 		// uptransport.DebugStopAmi <- 1
 		// time.Sleep(time.Second)
+		setup.Set.Work = false
 		time.Sleep(5 * time.Second)
 		break loop
 	}

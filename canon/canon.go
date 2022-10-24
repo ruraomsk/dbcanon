@@ -12,7 +12,7 @@ import (
 	"github.com/ruraomsk/dbcanon/setup"
 )
 
-func Cannon(name string, i int) {
+func Cannon(name string, isStat bool) {
 	var err error
 	dbinfo := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
 		setup.Set.DataBase.Host, setup.Set.DataBase.User,
@@ -34,13 +34,19 @@ func Cannon(name string, i int) {
 		}
 		table.createifneed()
 		// time.Sleep(time.Duration((i+1)*100) * time.Millisecond)
-		step := time.NewTicker(time.Duration(setup.Set.Step) * time.Millisecond)
+		// step := time.NewTicker(time.Duration(setup.Set.Step) * time.Millisecond)
 
 		for {
-			<-step.C
+			time.Sleep(time.Duration(setup.Set.Step) * time.Millisecond)
+			if !setup.Set.Work {
+				table.db.Close()
+				return
+			}
 			st := time.Now()
 			table.newData()
-			cstat <- stat{name: table.name, op: "write", long: time.Now().Sub(st)}
+			if isStat {
+				cstat <- stat{name: table.name, op: "write", long: time.Now().Sub(st)}
+			}
 
 		}
 	}
@@ -65,13 +71,32 @@ func Reader(name string, interval int) {
 			time.Sleep(10 * time.Second)
 			continue
 		}
-		step := time.NewTicker(time.Duration(interval) * time.Minute)
+		var step *time.Ticker
+		if interval < 0 {
+			step = time.NewTicker(time.Minute)
+		} else {
+			step = time.NewTicker(time.Duration(interval) * time.Minute)
+		}
 		for {
 			<-step.C
-			st := time.Now()
-			_, err = table.readData()
-			if err == nil {
-				cstat <- stat{name: table.name, op: "read", long: time.Now().Sub(st)}
+			if !setup.Set.Work {
+				table.db.Close()
+				return
+			}
+			if interval > 0 {
+				st := time.Now()
+				_, err = table.readData()
+				if err == nil {
+					cstat <- stat{name: table.name, op: "read", long: time.Now().Sub(st)}
+				}
+			} else {
+				//Ловим спинлок
+				count, err := table.getSize()
+				if err != nil {
+					return
+				}
+				logger.Info.Printf("Table %s counted %d", table.name, count)
+
 			}
 		}
 	}
