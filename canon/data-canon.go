@@ -53,9 +53,7 @@ func (d *datarecord) newData() {
 	d.p2 = rand.Float32() * float32(d.p1)
 	d.p3 = rand.Int()%2 == 0
 	d.js = make([]Status, 0)
-	for i := 0; i < (5 + rand.Intn(10)); i++ {
-		d.js = append(d.js, Status{Tact_tick: i, Program_number: d.p1, Tact_number: d.p1 % 7})
-	}
+	d.js = append(d.js, Status{Tact_tick: d.p1 % 17, Program_number: d.p1, Tact_number: d.p1 % 7})
 }
 func (t *Table) createifneed() {
 	create := fmt.Sprintf(createFormat, t.name)
