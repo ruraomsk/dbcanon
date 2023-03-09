@@ -4,10 +4,10 @@
 	avg=10
 	max=10
 [dataBase]
-	host= "172.16.58.60"
+	host= "172.16.58.12"
 	# host= "127.0.0.1"
 	port= 5432
 	user= "postgres"
 	password= "162747"
-	dbname= "cannon"
+	dbname= "canon"
 	step=5
